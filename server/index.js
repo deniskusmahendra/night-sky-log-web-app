@@ -12,3 +12,6 @@ app.get("/api/targets", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Night Sky Log API listening on http://localhost:${PORT}`);
 });
+
+// Also export the app so Vercel's Express runtime can use it as an entrypoint.
+module.exports = app;
