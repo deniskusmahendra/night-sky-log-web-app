@@ -236,6 +236,37 @@ select:focus-visible {
   color: var(--muted);
 }
 
+.seen-button {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(143, 183, 255, 0.35);
+  border-radius: 10px;
+  background: rgba(143, 183, 255, 0.08);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.seen-button:hover {
+  background: rgba(143, 183, 255, 0.18);
+  border-color: var(--accent);
+}
+
+.seen-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.seen-button.is-seen {
+  background: rgba(255, 217, 138, 0.14);
+  border-color: rgba(255, 217, 138, 0.6);
+  color: var(--gold);
+}
+
 .message {
   margin: 2rem 0 0;
   text-align: center;

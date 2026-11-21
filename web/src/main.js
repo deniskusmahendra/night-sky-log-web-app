@@ -57,6 +57,34 @@ const chartPanelEl = app.querySelector("#chart-panel");
 
 let targets = [];
 
+const STORAGE_KEY = "night-sky-log:seen";
+
+function loadSeen() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return new Set(Array.isArray(stored) ? stored : []);
+  } catch (error) {
+    console.warn("Could not read seen targets:", error);
+    return new Set();
+  }
+}
+
+function saveSeen() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...seen]));
+  } catch (error) {
+    console.warn("Could not save seen targets:", error);
+  }
+}
+
+function toggleSeen(id) {
+  if (seen.has(id)) seen.delete(id);
+  else seen.add(id);
+  saveSeen();
+}
+
+const seen = loadSeen();
+
 function createCard(target) {
   const card = document.createElement("article");
   card.className = "card";
@@ -91,7 +119,19 @@ function createCard(target) {
   month.className = "card-month";
   month.textContent = `Best in ${MONTH_NAMES[target.bestMonth - 1]}`;
 
-  card.append(type, name, difficulty, tip, month);
+  const seenButton = document.createElement("button");
+  seenButton.type = "button";
+  seenButton.className = "seen-button";
+  const isSeen = seen.has(target.id);
+  seenButton.textContent = isSeen ? "✓ Seen it" : "Seen it";
+  seenButton.classList.toggle("is-seen", isSeen);
+  seenButton.setAttribute("aria-pressed", String(isSeen));
+  seenButton.addEventListener("click", () => {
+    toggleSeen(target.id);
+    renderCards();
+  });
+
+  card.append(type, name, difficulty, tip, month, seenButton);
   return card;
 }
 
