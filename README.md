@@ -94,20 +94,23 @@ VITE_API_URL=https://example.com/api/targets npm run dev
 
 ## Deploy to Vercel
 
-The app is set up for a single Vercel deployment from the repository root:
+The app is configured as a Vercel **Services** project with two services in `vercel.json`:
 
-- `vercel.json` tells Vercel to install and build `web/` and serve `web/dist`.
-- `api/targets.js` is a Node serverless function serving the same 24 targets as the Express app. Both import the shared list from `server/targets.js`.
-- No environment variable is required in production — the page calls `/api/targets` on its own origin.
+- `server` (`server/`, Express) is the API. It is publicly reachable at `/api/*`.
+- `web` (`web/`, Vite) is the static site. It is publicly reachable at `/*`.
+
+Top-level rewrites send `/api/(.*)` to `server` and everything else to `web`. The browser calls `/api/targets` on the same origin, so no environment variable is needed in production. There are no service-to-service bindings because the static web service does not call the server from server-side code.
 
 Steps:
 
 1. Push the repository to GitHub/GitLab/Bitbucket.
 2. In Vercel, choose **Add New → Project** and import the repository.
-3. Leave **Root Directory** at the repository root. `vercel.json` provides the install command, build command, and output directory.
+3. Select the option to group the detected applications into a single project using **Services**. Keep the Root Directory at the repository root.
 4. Deploy. The site and `/api/targets` will be available on the same Vercel URL.
 
-For local development, keep using `npm start` in `server/` and `npm run dev` in `web/`.
+To test the Vercel setup locally, run `vercel dev` from the repository root. It runs both services and applies the same rewrites. The Vite dev proxy is disabled automatically when `VERCEL` is set, so `/api` goes through Vercel routing instead of `localhost:3001`.
+
+For plain local development without Vercel, keep using `npm start` in `server/` and `npm run dev` in `web/`.
 
 ## OpenCode `/sky` plugin
 
