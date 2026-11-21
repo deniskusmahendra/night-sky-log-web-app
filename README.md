@@ -85,11 +85,29 @@ The endpoint sends `Access-Control-Allow-Origin: *` so the Vite page can read it
 ### Configuration
 
 - `PORT` sets the API port (default `3001`).
-- `VITE_API_URL` overrides the API URL used by the web page (default `http://localhost:3001/api/targets`):
+- The web page calls `/api/targets` by default. During local development, Vite proxies that path to `http://localhost:3001`, so the Express server must be running.
+- `VITE_API_URL` overrides that URL if you need to point at a separate API:
 
 ```bash
 VITE_API_URL=https://example.com/api/targets npm run dev
 ```
+
+## Deploy to Vercel
+
+The app is set up for a single Vercel deployment from the repository root:
+
+- `vercel.json` tells Vercel to install and build `web/` and serve `web/dist`.
+- `api/targets.js` is a Node serverless function serving the same 24 targets as the Express app. Both import the shared list from `server/targets.js`.
+- No environment variable is required in production — the page calls `/api/targets` on its own origin.
+
+Steps:
+
+1. Push the repository to GitHub/GitLab/Bitbucket.
+2. In Vercel, choose **Add New → Project** and import the repository.
+3. Leave **Root Directory** at the repository root. `vercel.json` provides the install command, build command, and output directory.
+4. Deploy. The site and `/api/targets` will be available on the same Vercel URL.
+
+For local development, keep using `npm start` in `server/` and `npm run dev` in `web/`.
 
 ## OpenCode `/sky` plugin
 

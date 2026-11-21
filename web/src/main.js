@@ -1,7 +1,7 @@
 import Chart from "chart.js/auto";
 import "./style.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api/targets";
+const API_URL = import.meta.env.VITE_API_URL || "/api/targets";
 
 const MONTH_NAMES = [
   "January",
