@@ -2,17 +2,21 @@
 
 A small app that suggests what to look at in the night sky each month. It includes an Express API, a Vite web page, and a local OpenCode TUI plugin.
 
+**Live demo:** https://night-sky-log-web-app.vercel.app
+
 ## What's here
 
 - `server/` — Express API serving `GET /api/targets` with 24 bright targets (planets, star clusters, nebulae, and galaxies).
 - `web/` — Vite + Chart.js page with a month picker, target cards, and a "Seen It" toggle.
 - `docs/` — short setup notes for Express, Vite, and Chart.js.
 - `.opencode/plugins/sky/` — OpenCode v2 TUI plugin that adds the `/sky` slash command.
+- `vercel.json` — Vercel Services config that deploys `server/` and `web/` as one project.
 
 ## Requirements
 
 - Node.js 18 or newer and npm
 - OpenCode v2 if you want the `/sky` plugin
+- Vercel CLI if you want to test the deployment locally with `vercel dev`
 
 ## Run locally
 
@@ -80,7 +84,7 @@ The endpoint sends `Access-Control-Allow-Origin: *` so the Vite page can read it
 
 - The month picker filters cards by `bestMonth`; "All months" is the default.
 - The bar chart at the top shows how many targets are best in each month.
-- Each card has a **Seen It** button. Target ids are stored in browser `localStorage` under `night-sky-log:seen`, so they survive reloads and filtering. Clicking again marks the target as unseen.
+- Each card has a **Seen It** button. Target ids are stored in browser `localStorage` under `night-sky-log:seen`, so they survive reloads and filtering. Clicking again marks the target as unseen. This state is local to that browser — it is not synced between devices or users.
 
 ### Configuration
 
@@ -106,11 +110,17 @@ Steps:
 1. Push the repository to GitHub/GitLab/Bitbucket.
 2. In Vercel, choose **Add New → Project** and import the repository.
 3. Select the option to group the detected applications into a single project using **Services**. Keep the Root Directory at the repository root.
-4. Deploy. The site and `/api/targets` will be available on the same Vercel URL.
+4. Deploy. The site and `/api/targets` will be available on the same Vercel URL. The current production deployment is **https://night-sky-log-web-app.vercel.app**.
 
 To test the Vercel setup locally, run `vercel dev` from the repository root. It runs both services and applies the same rewrites. The Vite dev proxy is disabled automatically when `VERCEL` is set, so `/api` goes through Vercel routing instead of `localhost:3001`.
 
 For plain local development without Vercel, keep using `npm start` in `server/` and `npm run dev` in `web/`.
+
+## Limitations
+
+- Target data is hardcoded in `server/targets.js`; there is no database or admin UI.
+- "Seen It" state lives only in the browser's `localStorage`. There is no account, sync, or reset-all UI.
+- There are no automated tests yet; verification has been manual (`npm run build`, API smoke checks, and the live deployment).
 
 ## OpenCode `/sky` plugin
 
